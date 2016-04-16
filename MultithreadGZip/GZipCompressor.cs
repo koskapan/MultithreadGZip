@@ -10,7 +10,7 @@ namespace MultithreadGZip
     public class GZipCompressor : IGZipCompressor
     {
         private int PROCESSORS_COUNT;
-
+        delegate int CompressionOpearationDelegate(string inFile, string outFile, long buffSize);
         public GZipCompressor()
         {
             PROCESSORS_COUNT = Environment.ProcessorCount;
@@ -72,22 +72,30 @@ namespace MultithreadGZip
 
         public IAsyncResult BeginCompress(string startFileName, string endFileName, long bufferSize, AsyncCallback callback, object state)
         {
-            throw new NotImplementedException();
+            CompressionOpearationDelegate cod = Compress;
+            return cod.BeginInvoke(startFileName, endFileName, bufferSize, callback, state);
         }
 
         public IAsyncResult BeginDecompress(string startFileName, string endFileName, long bufferSize, AsyncCallback callback, object state)
         {
-            throw new NotImplementedException();
+            CompressionOpearationDelegate cod = Decompress;
+            return cod.BeginInvoke(startFileName, endFileName, bufferSize, callback, state);
         }
 
         public int EndCompress(IAsyncResult result)
         {
-            throw new NotImplementedException();
+            if (result == null) throw new ArgumentNullException("result");
+            CompressionOpearationDelegate cod = result.AsyncState as CompressionOpearationDelegate;
+            if (cod == null) throw new InvalidCastException("result state is not a proper delegate");
+            return cod.EndInvoke(result);
         }
 
         public int EndDecompress(IAsyncResult result)
         {
-            throw new NotImplementedException();
+            if (result == null) throw new ArgumentNullException("result");
+            CompressionOpearationDelegate cod = result.AsyncState as CompressionOpearationDelegate;
+            if (cod == null) throw new InvalidCastException("result state is not a proper delegate");
+            return cod.EndInvoke(result);
         }
     }
 }
