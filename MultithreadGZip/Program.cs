@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace MultithreadGZip
 {
@@ -11,6 +12,7 @@ namespace MultithreadGZip
         const int SUCCESS_CODE = 0;
         const int FAIL_CODE = 1;
         const long BUFFER_SIZE = 524288000;
+        private delegate int CompressionOperationDelegate(string inF, string outF, long buffSize);
 
         public static int Main(string[] args)
         {
@@ -30,15 +32,25 @@ namespace MultithreadGZip
                             string endFileName = args[2];
                             if (!File.Exists(startFileName))
                                 throw new FileNotFoundException("File not found! " + startFileName);
+                            CompressionOperationDelegate cod;
                             switch (args[0].ToLower())
                             {
                                 case "compress":
-                                    return compressor.Compress(startFileName, endFileName, BUFFER_SIZE);
+                                        cod = compressor.Compress;
+                                        break;
                                 case "decompress":
-                                    return compressor.Decompress(startFileName, endFileName, BUFFER_SIZE);
+                                        cod = compressor.Decompress;
+                                        break;
                                 default:
                                     throw new ArgumentNullException("[operation]");
                             }
+                            var res = cod.BeginInvoke(startFileName, endFileName, BUFFER_SIZE, null, null);
+                            while (!res.IsCompleted)
+                            {
+                                Console.Write('.');
+                                Thread.Sleep(500);
+                            }
+                            return cod.EndInvoke(res);
                         }
                     default:
                         throw new ArgumentNullException("[operation]");
