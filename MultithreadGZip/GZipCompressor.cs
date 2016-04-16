@@ -9,7 +9,14 @@ namespace MultithreadGZip
 {
     public class GZipCompressor : IGZipCompressor
     {
-        public int Compress(string startFileName, string endFileName, int bufferSize)
+        private int PROCESSORS_COUNT;
+
+        public GZipCompressor()
+        {
+            PROCESSORS_COUNT = Environment.ProcessorCount;
+        }
+
+        public int Compress(string startFileName, string endFileName, long bufferSize)
         {
             try
             {
@@ -36,8 +43,7 @@ namespace MultithreadGZip
             }
 
         }
-
-        public int Decompress(string startFileName, string endFileName, int bufferSize)
+        public int Decompress(string startFileName, string endFileName, long bufferSize)
         {
             try
             {
@@ -62,6 +68,26 @@ namespace MultithreadGZip
             {
                 throw ex;
             }
+        }
+
+        public IAsyncResult BeginCompress(string startFileName, string endFileName, long bufferSize, AsyncCallback callback, object state)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncResult BeginDecompress(string startFileName, string endFileName, long bufferSize, AsyncCallback callback, object state)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int EndCompress(IAsyncResult result)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int EndDecompress(IAsyncResult result)
+        {
+            throw new NotImplementedException();
         }
     }
 }

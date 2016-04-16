@@ -10,9 +10,9 @@ namespace MultithreadGZip.Test
     [TestClass]
     public class UnitTest1
     {
-        string startFileName = "pic1.jpg";
-        string compressedFileName = "pic1.gz";
-        string decompressedFileName = "decompressed_pic1.jpg";
+        string startFileName = "start_file";
+        string compressedFileName = "compressed_file";
+        string decompressedFileName = "decompressed_file";
 
         [TestMethod]
         public void compression_fail_test()
@@ -29,9 +29,6 @@ namespace MultithreadGZip.Test
             int result = Program.Main(new[] { "compress", startFileName, compressedFileName });
             Assert.AreEqual(0, result);
             Assert.IsTrue(File.Exists(compressedFileName));
-            /*FileInfo startFileInfo = new FileInfo(startFileName);
-            FileInfo compressedFileInfo = new FileInfo(compressedFileName);
-            Assert.IsTrue(startFileInfo.Length > compressedFileInfo.Length);*/
         }
 
         [TestMethod]
@@ -41,10 +38,6 @@ namespace MultithreadGZip.Test
             int result = Program.Main(new[] {"decompress", compressedFileName, decompressedFileName });
             Assert.AreEqual(0, result);
             Assert.IsTrue(File.Exists(decompressedFileName));
-            /*FileInfo compressedFileInfo = new FileInfo(compressedFileName);
-            FileInfo decompressedFileInfo = new FileInfo(decompressedFileName);
-            Assert.IsTrue(compressedFileInfo.Length < decompressedFileInfo.Length);*/
-
         }
 
 

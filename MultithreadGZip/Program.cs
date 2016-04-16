@@ -10,7 +10,7 @@ namespace MultithreadGZip
     {
         const int SUCCESS_CODE = 0;
         const int FAIL_CODE = 1;
-        const int BUFFER_SIZE = 1024;
+        const long BUFFER_SIZE = 524288000;
 
         public static int Main(string[] args)
         {
@@ -30,8 +30,6 @@ namespace MultithreadGZip
                             string endFileName = args[2];
                             if (!File.Exists(startFileName))
                                 throw new FileNotFoundException("File not found! " + startFileName);
-                            if (!File.Exists(endFileName))
-                                throw new FileNotFoundException("File not found! " + endFileName);
                             switch (args[0].ToLower())
                             {
                                 case "compress":
