@@ -15,10 +15,26 @@ namespace MultithreadGZip.Test
         string decompressedFileName = "decompressed_file";
 
         [TestMethod]
-        public void compression_fail_test()
+        public void compression_fail_test_two_params()
         {
             Assert.IsTrue(File.Exists(startFileName));
             int result = Program.Main(new[] { "compress", startFileName });
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
+        public void compression_fail_test_one_param()
+        {
+            Assert.IsTrue(File.Exists(startFileName));
+            int result = Program.Main(new[] { "compress" });
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
+        public void compression_fail_test_file_not_exist()
+        {
+            Assert.IsTrue(File.Exists(startFileName));
+            int result = Program.Main(new[] { "compress", "some_file", compressedFileName });
             Assert.AreEqual(1, result);
         }
 
