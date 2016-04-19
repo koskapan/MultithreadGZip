@@ -10,26 +10,12 @@ namespace MultithreadGZip
     public class GZipCompressor : IGZipCompressor
     {
         private int PROCESSORS_COUNT;
-        private long BUFFER_SIZE = 524288000;
         public GZipCompressor()
         {
             PROCESSORS_COUNT = Environment.ProcessorCount;
         }
 
-        public int Process(GZipCommandLineArgs args)
-        {
-            switch (args.Method)
-            {
-                case CompressorMethods.compress:
-                    return Compress(args.StartFileName, args.EndFileName, BUFFER_SIZE);
-                case CompressorMethods.decompress:
-                    return Decompress(args.StartFileName, args.EndFileName, BUFFER_SIZE);
-                default:
-                    return 1;
-            }
-        }
-
-        private int Compress(string startFileName, string endFileName, long bufferSize)
+        public int Compress(string startFileName, string endFileName, long bufferSize)
         {
             try
             {
@@ -57,7 +43,7 @@ namespace MultithreadGZip
 
         }
 
-        private int Decompress(string startFileName, string endFileName, long bufferSize)
+        public int Decompress(string startFileName, string endFileName, long bufferSize)
         {
             try
             {

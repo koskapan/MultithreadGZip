@@ -11,6 +11,7 @@ namespace MultithreadGZip
     {
         const int SUCCESS_CODE = 0;
         const int FAIL_CODE = 1;
+        const long BUFFER_SIZE = 524288000;
         private delegate int CompressionOperationDelegate(string inF, string outF, long buffSize);
 
         public static int Main(string[] args)
@@ -18,7 +19,17 @@ namespace MultithreadGZip
             IGZipCompressor compressor = new GZipCompressor();
             try
             {
-                return compressor.Process(GZipCommandLineArgs.ParseArgs(args));
+                GZipCommandLineArgs cmdArgs = GZipCommandLineArgs.ParseArgs(args);
+                switch (cmdArgs.Method)
+                {
+                    case CompressorMethods.compress:
+                        return compressor.Compress(cmdArgs.StartFileName, cmdArgs.EndFileName, BUFFER_SIZE);
+                    case CompressorMethods.decompress:
+                        return compressor.Decompress(cmdArgs.StartFileName, cmdArgs.EndFileName, BUFFER_SIZE);
+                    default:
+                        return FAIL_CODE;
+                }
+                
             }
             catch (InvalidCastException ex)
             {
