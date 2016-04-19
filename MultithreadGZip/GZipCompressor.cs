@@ -10,6 +10,7 @@ namespace MultithreadGZip
     public class GZipCompressor : IGZipCompressor
     {
         private int PROCESSORS_COUNT;
+        private long BUFFER_SIZE = 524288000;
         public GZipCompressor()
         {
             PROCESSORS_COUNT = Environment.ProcessorCount;
@@ -20,9 +21,9 @@ namespace MultithreadGZip
             switch (args.Method)
             {
                 case CompressorMethods.compress:
-                    return Compress(args.StartFileName, args.EndFileName, 1024);
+                    return Compress(args.StartFileName, args.EndFileName, BUFFER_SIZE);
                 case CompressorMethods.decompress:
-                    return Compress(args.StartFileName, args.EndFileName, 1024);
+                    return Decompress(args.StartFileName, args.EndFileName, BUFFER_SIZE);
                 default:
                     return 1;
             }

@@ -11,7 +11,6 @@ namespace MultithreadGZip
     {
         const int SUCCESS_CODE = 0;
         const int FAIL_CODE = 1;
-        const long BUFFER_SIZE = 524288000;
         private delegate int CompressionOperationDelegate(string inF, string outF, long buffSize);
 
         public static int Main(string[] args)
