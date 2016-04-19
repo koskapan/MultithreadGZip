@@ -15,7 +15,7 @@ namespace MultithreadGZip
         {
             PROCESSORS_COUNT = Environment.ProcessorCount;
         }
-
+        /*comment*/
         public int Compress(string startFileName, string endFileName, long bufferSize)
         {
             try
