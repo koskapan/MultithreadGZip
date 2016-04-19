@@ -9,6 +9,7 @@ namespace MultithreadGZip
 {
     public class GZipCompressor : IGZipCompressor
     {
+        /*some master comment*/
         private int PROCESSORS_COUNT;
         public GZipCompressor()
         {
