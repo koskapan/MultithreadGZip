@@ -19,51 +19,31 @@ namespace MultithreadGZip
             IGZipCompressor compressor = new GZipCompressor();
             try
             {
-                switch (args.Length)
-                {
-                    case 0:
-                        ShowHelp(); ;
-                        return FAIL_CODE;
-                    case 2:
-                        throw new ArgumentNullException("[destination file name]");
-                    case 3:
-                        {
-                            string startFileName = args[1];
-                            string endFileName = args[2];
-                            if (!File.Exists(startFileName))
-                                throw new FileNotFoundException("File not found! " + startFileName);
-                            CompressionOperationDelegate cod;
-                            switch (args[0].ToLower())
-                            {
-                                case "compress":
-                                        cod = compressor.Compress;
-                                        break;
-                                case "decompress":
-                                        cod = compressor.Decompress;
-                                        break;
-                                default:
-                                    throw new ArgumentNullException("[operation]");
-                            }
-                            var res = cod.BeginInvoke(startFileName, endFileName, BUFFER_SIZE, null, null);
-                            while (!res.IsCompleted)
-                            {
-                                Console.Write('.');
-                                Thread.Sleep(500);
-                            }
-                            return cod.EndInvoke(res);
-                        }
-                    default:
-                        throw new ArgumentNullException("[operation]");
-                }
+                return compressor.Process(GZipCommandLineArgs.ParseArgs(args));
+            }
+            catch (InvalidCastException ex)
+            {
+                HandleError(ex, "Invalid parameter [method]");
+                return FAIL_CODE;
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                HandleError(ex, "Missing parameter [destination_file_name]");
+                return FAIL_CODE;
+            }
+            catch (FileNotFoundException ex)
+            {
+                HandleError(ex, "Cannot find file: " + args[1] );
+                return FAIL_CODE;
             }
             catch (Exception ex)
             {
-                HandleError(ex);
+                HandleError(ex, "");
                 return FAIL_CODE;
             }
         }
 
-        private static void HandleError(Exception ex)
+        private static void HandleError(Exception ex, string message)
         {
             Console.WriteLine(ex.Message);
         }
