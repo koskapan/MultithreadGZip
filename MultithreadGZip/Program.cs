@@ -11,24 +11,33 @@ namespace MultithreadGZip
     {
         const int SUCCESS_CODE = 0;
         const int FAIL_CODE = 1;
-        const long BUFFER_SIZE = 524288000;
-        private delegate int CompressionOperationDelegate(string inF, string outF, long buffSize);
+        private delegate int CompressionOperationDelegate(string inF, string outF);
 
         public static int Main(string[] args)
         {
-            IGZipCompressor compressor = new GZipCompressor();
+            IGZipCompressor compressor = new GZipCompressor(Properties.Settings.Default.BUFFER_SIZE, Properties.Settings.Default.THREADS_COUNT);
             try
             {
                 GZipCommandLineArgs cmdArgs = GZipCommandLineArgs.ParseArgs(args);
+                CompressionOperationDelegate cod;
                 switch (cmdArgs.Method)
                 {
                     case CompressorMethods.compress:
-                        return compressor.Compress(cmdArgs.StartFileName, cmdArgs.EndFileName, BUFFER_SIZE);
+                        cod = compressor.Compress;
+                        break;
                     case CompressorMethods.decompress:
-                        return compressor.Decompress(cmdArgs.StartFileName, cmdArgs.EndFileName, BUFFER_SIZE);
+                        cod = compressor.Decompress;
+                        break;
                     default:
                         return FAIL_CODE;
                 }
+                IAsyncResult operationResult = cod.BeginInvoke(cmdArgs.StartFileName, cmdArgs.EndFileName, null, cod);
+                while (!operationResult.IsCompleted)
+                {
+                    Console.Write('.');
+                    Thread.Sleep(500);
+                }
+                return cod.EndInvoke(operationResult);
                 
             }
             catch (InvalidCastException ex)
@@ -55,15 +64,15 @@ namespace MultithreadGZip
 
         private static void HandleError(Exception ex, string message)
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine(message + ": " + ex.Message);
         }
 
         private static void ShowHelp()
         {
             Console.WriteLine(@"
-Compress / Decompress single files.
+Compress / Decompress single file.
 Usage:
-    MultithreadGZip.exe [operation] source_file_name destination_file_name
+    MultithreadGZip.exe [operation] [source_file_name] [destination_file_name]
 
 Operations:
     compress

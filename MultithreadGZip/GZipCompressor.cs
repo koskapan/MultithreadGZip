@@ -9,13 +9,15 @@ namespace MultithreadGZip
 {
     public class GZipCompressor : IGZipCompressor
     {
-        private int PROCESSORS_COUNT;
-        public GZipCompressor()
+        private int threadsCount;
+        private long bufferSize;
+        public GZipCompressor(long operationBufferSize, int numberOfThreads)
         {
-            PROCESSORS_COUNT = Environment.ProcessorCount;
+            threadsCount = numberOfThreads;
+            bufferSize = operationBufferSize;
         }
 
-        public int Compress(string startFileName, string endFileName, long bufferSize)
+        public int Compress(string startFileName, string endFileName)
         {
             try
             {
@@ -43,7 +45,7 @@ namespace MultithreadGZip
 
         }
 
-        public int Decompress(string startFileName, string endFileName, long bufferSize)
+        public int Decompress(string startFileName, string endFileName)
         {
             try
             {
