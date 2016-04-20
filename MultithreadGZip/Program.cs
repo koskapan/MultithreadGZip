@@ -11,11 +11,15 @@ namespace MultithreadGZip
     {
         const int SUCCESS_CODE = 0;
         const int FAIL_CODE = 1;
-        private delegate int CompressionOperationDelegate(string inF, string outF);
+        private static IGZipCancellationToken cancelToken;
+        private delegate int CompressionOperationDelegate(string inF, string outF, IGZipCancellationToken cancellToken);
 
         public static int Main(string[] args)
         {
+            GZipCancellationTokenSource cancelTokenSource = new GZipCancellationTokenSource();
+            cancelToken = cancelTokenSource.Token;
             IGZipCompressor compressor = new GZipCompressor(Properties.Settings.Default.BUFFER_SIZE, Properties.Settings.Default.THREADS_COUNT);
+            Console.CancelKeyPress += Console_CancelKeyPress;
             try
             {
                 GZipCommandLineArgs cmdArgs = GZipCommandLineArgs.ParseArgs(args);
@@ -31,7 +35,7 @@ namespace MultithreadGZip
                     default:
                         return FAIL_CODE;
                 }
-                IAsyncResult operationResult = cod.BeginInvoke(cmdArgs.StartFileName, cmdArgs.EndFileName, null, cod);
+                IAsyncResult operationResult = cod.BeginInvoke(cmdArgs.StartFileName, cmdArgs.EndFileName, cancelToken, null, cod);
                 while (!operationResult.IsCompleted)
                 {
                     Console.Write('.');
@@ -55,11 +59,22 @@ namespace MultithreadGZip
                 HandleError(ex, "Cannot find file: " + args[1] );
                 return FAIL_CODE;
             }
+            catch (OperationCanceledException ex)
+            {
+                HandleError(ex, "Operation was cancelled");
+                return FAIL_CODE; //What this method should return if the operation was canceled? 1 or 0?
+            }
             catch (Exception ex)
             {
                 HandleError(ex, "");
                 return FAIL_CODE;
             }
+        }
+
+        private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        {
+            e.Cancel = true;
+            cancelToken.IsCancelled = true;
         }
 
         private static void HandleError(Exception ex, string message)

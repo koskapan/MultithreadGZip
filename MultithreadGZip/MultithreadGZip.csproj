@@ -59,8 +59,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GZipCancellationToken.cs" />
+    <Compile Include="GZipCancellationTokenSource.cs" />
     <Compile Include="GZipCommandLineArgs.cs" />
     <Compile Include="GZipCompressor.cs" />
+    <Compile Include="IGZipCancellationToken.cs" />
     <Compile Include="IGZipCompressor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

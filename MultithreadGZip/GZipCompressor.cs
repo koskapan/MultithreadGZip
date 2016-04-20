@@ -17,7 +17,7 @@ namespace MultithreadGZip
             bufferSize = operationBufferSize;
         }
 
-        public int Compress(string startFileName, string endFileName)
+        public int Compress(string startFileName, string endFileName, IGZipCancellationToken cancellationToken)
         {
             try
             {
@@ -31,6 +31,7 @@ namespace MultithreadGZip
                             int h;
                             while ((h = fsInput.Read(buffer, 0, buffer.Length)) > 0)
                             {
+                                if (cancellationToken.IsCancelled) throw new OperationCanceledException();
                                 gzipStream.Write(buffer, 0, h);
                             }
                         }
@@ -40,12 +41,13 @@ namespace MultithreadGZip
             }
             catch (Exception ex)
             {
+                if (File.Exists(endFileName)) File.Delete(endFileName);
                 throw ex;
             }
 
         }
 
-        public int Decompress(string startFileName, string endFileName)
+        public int Decompress(string startFileName, string endFileName, IGZipCancellationToken cancellationToken)
         {
             try
             {
@@ -59,6 +61,7 @@ namespace MultithreadGZip
                             int h;
                             while ((h = gzipStream.Read(buffer, 0, buffer.Length)) > 0)
                             {
+                                if (cancellationToken.IsCancelled) throw new OperationCanceledException();
                                 fsOutput.Write(buffer, 0, h);
                             }
                         }
@@ -68,6 +71,7 @@ namespace MultithreadGZip
             }
             catch (Exception ex)
             {
+                if (File.Exists(endFileName)) File.Delete(endFileName);
                 throw ex;
             }
         }

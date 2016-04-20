@@ -7,7 +7,7 @@ namespace MultithreadGZip
 {
     public interface IGZipCompressor
     {
-        int Compress(string startFileName, string endFileName);
-        int Decompress(string startFileName, string endFileName);
+        int Compress(string startFileName, string endFileName, IGZipCancellationToken cancellationToken);
+        int Decompress(string startFileName, string endFileName, IGZipCancellationToken cancellationToken);
     }
 }
