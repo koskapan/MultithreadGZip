@@ -13,5 +13,10 @@ namespace MultithreadGZip
         {
             Token = new GZipCancellationToken();
         }
+
+        public void Cancel()
+        {
+            Token.IsCancelled = true;
+        }
     }
 }

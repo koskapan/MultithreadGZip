@@ -8,6 +8,5 @@ namespace MultithreadGZip
     public class GZipCancellationToken : IGZipCancellationToken
     {
         public bool IsCancelled { get; set; }
-
     }
 }
