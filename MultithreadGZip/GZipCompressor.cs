@@ -31,7 +31,7 @@ namespace MultithreadGZip
                             int h;
                             while ((h = fsInput.Read(buffer, 0, buffer.Length)) > 0)
                             {
-                                if (cancellationToken.IsCancelled) throw new OperationCanceledException();
+                                if (cancellationToken.IsCancelled) throw new OperationCanceledException("Operation was cancelled");
                                 gzipStream.Write(buffer, 0, h);
                             }
                         }
@@ -61,7 +61,7 @@ namespace MultithreadGZip
                             int h;
                             while ((h = gzipStream.Read(buffer, 0, buffer.Length)) > 0)
                             {
-                                if (cancellationToken.IsCancelled) throw new OperationCanceledException();
+                                if (cancellationToken.IsCancelled) throw new OperationCanceledException("Operation was cancelled");
                                 fsOutput.Write(buffer, 0, h);
                             }
                         }

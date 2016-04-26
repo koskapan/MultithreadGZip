@@ -24,16 +24,13 @@ namespace MultithreadGZip
             {
                 GZipCommandLineArgs cmdArgs = GZipCommandLineArgs.ParseArgs(args);
                 CompressionOperationDelegate cod;
-                switch (cmdArgs.Method)
+                if (cmdArgs.Method == CompressorMethods.compress)
                 {
-                    case CompressorMethods.compress:
-                        cod = compressor.Compress;
-                        break;
-                    case CompressorMethods.decompress:
-                        cod = compressor.Decompress;
-                        break;
-                    default:
-                        return FAIL_CODE;
+                    cod = compressor.Compress;
+                }
+                else
+                {
+                    cod = compressor.Decompress;
                 }
                 IAsyncResult operationResult = cod.BeginInvoke(cmdArgs.StartFileName, cmdArgs.EndFileName, cancelToken, null, null);
                 while (!operationResult.IsCompleted)
@@ -41,8 +38,7 @@ namespace MultithreadGZip
                     Console.Write('.');
                     Thread.Sleep(500);
                 }
-                return cod.EndInvoke(operationResult);
-                
+                return cod.EndInvoke(operationResult);                
             }
             catch (Exception ex)
             {

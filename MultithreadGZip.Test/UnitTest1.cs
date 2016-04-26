@@ -39,6 +39,14 @@ namespace MultithreadGZip.Test
         }
 
         [TestMethod]
+        public void compression_fail_test_unknown_method()
+        {
+            Assert.IsTrue(File.Exists(startFileName));
+            int result = Program.Main(new[] { "compres", startFileName, compressedFileName });
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
         public void compression_test()
         {
             Assert.IsTrue(File.Exists(startFileName));
