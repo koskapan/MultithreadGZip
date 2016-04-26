@@ -44,29 +44,9 @@ namespace MultithreadGZip
                 return cod.EndInvoke(operationResult);
                 
             }
-            catch (InvalidCastException ex)
-            {
-                HandleError(ex, "Invalid parameter [method]");
-                return FAIL_CODE;
-            }
-            catch (IndexOutOfRangeException ex)
-            {
-                HandleError(ex, "Missing parameter [destination_file_name]");
-                return FAIL_CODE;
-            }
-            catch (FileNotFoundException ex)
-            {
-                HandleError(ex, "Cannot find file: " + args[1] );
-                return FAIL_CODE;
-            }
-            catch (OperationCanceledException ex)
-            {
-                HandleError(ex, "Operation was cancelled");
-                return FAIL_CODE; //What this method should return if the operation was canceled? 1 or 0?
-            }
             catch (Exception ex)
             {
-                HandleError(ex, "");
+                HandleError(ex);
                 return FAIL_CODE;
             }
         }
@@ -77,9 +57,9 @@ namespace MultithreadGZip
             cancelToken.IsCancelled = true;
         }
 
-        private static void HandleError(Exception ex, string message)
+        private static void HandleError(Exception ex)//, string message)
         {
-            Console.WriteLine(message + ": " + ex.Message);
+            Console.WriteLine(ex.Message);// + ": " + ex.Message);
         }
 
         private static void ShowHelp()

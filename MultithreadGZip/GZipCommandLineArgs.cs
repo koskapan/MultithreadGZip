@@ -27,9 +27,9 @@ namespace MultithreadGZip
                 CompressorMethods method = (CompressorMethods)Enum.Parse(typeof(CompressorMethods), args[0]);
                 return new GZipCommandLineArgs(method, args[1], args[2]);
             }
-            catch
+            catch (InvalidCastException ex)
             {
-                throw;
+                throw new InvalidCastException("Can't find command " + args[0], ex);
             }
         }
     }

@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExceptionMapper.cs" />
     <Compile Include="GZipCancellationToken.cs" />
     <Compile Include="GZipCancellationTokenSource.cs" />
     <Compile Include="GZipCommandLineArgs.cs" />
