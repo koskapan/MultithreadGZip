@@ -31,6 +31,10 @@ namespace MultithreadGZip
             {
                 throw new InvalidCastException("Can't find command " + args[0], ex);
             }
+            catch (IndexOutOfRangeException ex)
+            {
+                throw new IndexOutOfRangeException("Missing parameter [destination_file_name]", ex);
+            }
         }
     }
 }
