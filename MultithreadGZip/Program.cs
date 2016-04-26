@@ -35,7 +35,7 @@ namespace MultithreadGZip
                     default:
                         return FAIL_CODE;
                 }
-                IAsyncResult operationResult = cod.BeginInvoke(cmdArgs.StartFileName, cmdArgs.EndFileName, cancelToken, null, cod);
+                IAsyncResult operationResult = cod.BeginInvoke(cmdArgs.StartFileName, cmdArgs.EndFileName, cancelToken, null, null);
                 while (!operationResult.IsCompleted)
                 {
                     Console.Write('.');
@@ -56,10 +56,11 @@ namespace MultithreadGZip
             e.Cancel = true;
             cancelToken.IsCancelled = true;
         }
-
+        
         private static void HandleError(Exception ex)
         {
             Console.WriteLine(ex.Message);
+            ShowHelp();
         }
 
         private static void ShowHelp()
