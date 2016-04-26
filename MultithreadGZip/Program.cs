@@ -33,7 +33,7 @@ namespace MultithreadGZip
                     cod = compressor.Decompress;
                 }
                 IAsyncResult operationResult = cod.BeginInvoke(cmdArgs.StartFileName, cmdArgs.EndFileName, cancelToken, null, null);
-                while (!operationResult.IsCompleted)
+                while (!operationResult.IsCompleted && !cancelToken.IsCancelled)
                 {
                     Console.Write('.');
                     Thread.Sleep(500);
@@ -55,7 +55,7 @@ namespace MultithreadGZip
         
         private static void HandleError(Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine("\r\n" + ex.Message);
             ShowHelp();
         }
 
