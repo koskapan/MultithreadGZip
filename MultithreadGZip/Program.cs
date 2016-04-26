@@ -57,9 +57,9 @@ namespace MultithreadGZip
             cancelToken.IsCancelled = true;
         }
 
-        private static void HandleError(Exception ex)//, string message)
+        private static void HandleError(Exception ex)
         {
-            Console.WriteLine(ex.Message);// + ": " + ex.Message);
+            Console.WriteLine(ex.Message);
         }
 
         private static void ShowHelp()
